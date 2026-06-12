@@ -1,0 +1,31 @@
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# IDE
+.idea/
+.vscode/
+
+# Runtime outputs
+outputs/
+runs/
+logs/
+
+# Large local assets
+datasets/*
+!datasets/.gitkeep
+models/*
+!models/.gitkeep
+
+# Office temporary files
+~$*.docx
+~$*.xlsx
+~$*.pptx
