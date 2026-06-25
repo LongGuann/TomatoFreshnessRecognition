@@ -14,6 +14,7 @@
 - 已初始化 Git 仓库。
 - 已实现可运行的命令行识别功能。
 - 已提供演示图片生成脚本和单元测试。
+- 已补充合成测试集、批量评估结果和评估图表。
 - 尚未实现模型训练、后端接口和前端页面。
 
 ## 计划功能
@@ -52,12 +53,16 @@ TomatoFreshnessRecognition/
   docs/
     paper/              # 课程论文最终文档
     figures/            # 论文相关图表
+    evaluation/         # 批量评估数据和图表
   scripts/
     create_demo_images.py
+    generate_test_dataset.py
+    evaluate_test_set.py
   src/
     tomato_freshness/   # 番茄识别核心代码
+  datasets/
+    test_set/           # 合成测试集与标签文件
   models/               # 后续模型文件目录，当前不提交大模型文件
-  datasets/             # 后续数据集目录，当前不提交原始大数据集
   tests/                # 单元测试
 ```
 
@@ -94,6 +99,35 @@ TomatoFreshnessRecognition/
    ```bash
    PYTHONPATH=src python -m unittest discover -s tests
    ```
+
+6. 生成测试集并输出评估图表：
+
+   ```bash
+   PYTHONPATH=src python scripts/generate_test_dataset.py
+   PYTHONPATH=src python scripts/evaluate_test_set.py
+   ```
+
+## 测试集与评估图表
+
+当前项目提供一组合成测试集，用于演示识别流程、批量评估和论文图表展示。测试集不代表真实菜市场采集数据，主要用于课程设计阶段的功能验证。
+
+测试集位置：
+
+- `datasets/test_set/labels.csv`：测试集标签文件
+- `datasets/test_set/excellent/`：优质番茄样本
+- `datasets/test_set/qualified/`：新鲜合格番茄样本
+- `datasets/test_set/slightly_rotten/`：轻微变质番茄样本
+- `datasets/test_set/badly_rotten/`：严重变质番茄样本
+
+评估输出位置：
+
+- `docs/evaluation/predictions.csv`：每张测试图片的预测明细
+- `docs/evaluation/summary_metrics.json`：总体准确率、各等级准确率、混淆矩阵和平均得分
+- `docs/evaluation/confusion_matrix.png`：混淆矩阵图
+- `docs/evaluation/prediction_distribution.png`：预测等级分布图
+- `docs/evaluation/average_score_by_class.png`：各等级平均新鲜度得分图
+
+当前合成测试集共 48 张图片，评估脚本输出的总体准确率约为 0.6042。由于当前版本使用启发式规则，不使用真实训练模型，因此该指标只用于流程展示，不代表最终模型能力。
 
 ## 识别逻辑说明
 

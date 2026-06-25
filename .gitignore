@@ -22,6 +22,8 @@ logs/
 # Large local assets
 datasets/*
 !datasets/.gitkeep
+!datasets/test_set/
+!datasets/test_set/**
 models/*
 !models/.gitkeep
 
