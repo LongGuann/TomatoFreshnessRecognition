@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>菜市番茄生鲜度智能识别系统</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <aside class="sidebar">
+      <div class="brand">
+        <span class="brand-mark">T</span>
+        <div>
+          <strong>番茄质检</strong>
+          <small>Freshness Console</small>
+        </div>
+      </div>
+      <nav class="nav">
+        <a href="#login">用户权限</a>
+        <a href="#detect">图像检测</a>
+        <a href="#records">溯源查询</a>
+        <a href="#alerts">异常预警</a>
+        <a href="#stats">统计分析</a>
+        <a href="#tests">功能测试</a>
+      </nav>
+    </aside>
+
+    <main class="workspace">
+      <header class="topbar">
+        <div>
+          <h1>菜市番茄生鲜度智能识别系统</h1>
+          <p>面向番茄单品类检测，完成图像采集、预处理、等级识别、记录溯源和异常预警。</p>
+        </div>
+        <div class="operator-pill" id="operatorPill">未登录</div>
+      </header>
+
+      <section class="panel grid-2" id="login">
+        <div>
+          <h2>用户登录与权限</h2>
+          <p class="muted">内置演示账号：管理员 admin/admin123，检测员 inspector/inspect123。</p>
+          <form class="login-form" id="loginForm">
+            <label>
+              账号
+              <input id="username" autocomplete="username" value="admin" />
+            </label>
+            <label>
+              密码
+              <input id="password" type="password" autocomplete="current-password" value="admin123" />
+            </label>
+            <button type="submit">登录并加载权限</button>
+          </form>
+        </div>
+        <div class="permission-box">
+          <h3>当前用户</h3>
+          <strong id="currentRole">未登录</strong>
+          <div class="chips" id="permissionChips"></div>
+          <p id="loginMessage" class="notice">请登录后进行检测。</p>
+        </div>
+      </section>
+
+      <section class="panel" id="detect">
+        <div class="section-head">
+          <div>
+            <h2>图像采集与番茄生鲜度识别</h2>
+            <p class="muted">支持选择演示图片或上传本地图片，后台会执行质量检测、预处理和新鲜度评分。</p>
+          </div>
+          <button id="detectBtn">开始识别</button>
+        </div>
+        <div class="detect-layout">
+          <div class="image-stage">
+            <img id="previewImage" alt="待检测番茄图片预览" />
+          </div>
+          <div class="controls">
+            <label>
+              样例图片
+              <select id="sampleSelect"></select>
+            </label>
+            <label>
+              上传图片
+              <input id="uploadInput" type="file" accept="image/*" />
+            </label>
+            <div class="result-card" id="resultCard">
+              <span class="status-chip neutral">等待检测</span>
+              <h3 id="resultLevel">未生成结果</h3>
+              <dl>
+                <div><dt>置信度</dt><dd id="confidence">-</dd></div>
+                <div><dt>新鲜度得分</dt><dd id="score">-</dd></div>
+                <div><dt>异常状态</dt><dd id="abnormal">-</dd></div>
+              </dl>
+              <p id="warningText">选择图片后点击开始识别。</p>
+            </div>
+          </div>
+        </div>
+        <div class="feature-grid" id="featureGrid"></div>
+      </section>
+
+      <section class="panel" id="records">
+        <div class="section-head">
+          <div>
+            <h2>检测记录溯源与查询</h2>
+            <p class="muted">记录图像路径、等级、置信度、检测人员、检测时间和异常状态。</p>
+          </div>
+          <div class="filters">
+            <select id="levelFilter">
+              <option value="">全部等级</option>
+              <option>优质</option>
+              <option>新鲜合格</option>
+              <option>轻微变质</option>
+              <option>严重变质</option>
+              <option>无效图像</option>
+            </select>
+            <select id="abnormalFilter">
+              <option value="">全部状态</option>
+              <option value="false">正常</option>
+              <option value="true">异常</option>
+            </select>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>时间</th>
+                <th>检测人员</th>
+                <th>图片</th>
+                <th>等级</th>
+                <th>置信度</th>
+                <th>异常</th>
+              </tr>
+            </thead>
+            <tbody id="recordBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel grid-2" id="alerts">
+        <div>
+          <h2>异常预警</h2>
+          <p class="muted">轻微变质和严重变质会自动进入异常台账，提醒检测人员复检或下架处理。</p>
+          <div id="alertList" class="alert-list"></div>
+        </div>
+        <div class="warning-board">
+          <h3>处理原则</h3>
+          <ul>
+            <li>轻微变质：复检后降级销售或单独标识。</li>
+            <li>严重变质：立即下架并记录处理人员。</li>
+            <li>无效图像：重新采集，避免误判。</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="panel" id="stats">
+        <div class="section-head">
+          <div>
+            <h2>数据统计分析</h2>
+            <p class="muted">统计检测总量、合格率、异常占比和四级新鲜度分布。</p>
+          </div>
+        </div>
+        <div class="metrics">
+          <div><span id="metricTotal">0</span><small>检测总量</small></div>
+          <div><span id="metricSuccess">0</span><small>有效检测</small></div>
+          <div><span id="metricQualified">0%</span><small>合格率</small></div>
+          <div><span id="metricAbnormal">0%</span><small>异常占比</small></div>
+        </div>
+        <div class="chart" id="levelChart"></div>
+      </section>
+
+      <section class="panel" id="tests">
+        <div class="section-head">
+          <div>
+            <h2>系统功能测试</h2>
+            <p class="muted">以下测试项与论文第 6 章保持一致，每项截图均来自本页面真实运行结果。</p>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>测试项</th>
+                <th>输入数据</th>
+                <th>预期结果</th>
+                <th>测试结论</th>
+              </tr>
+            </thead>
+            <tbody id="testBody"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <script src="/static/app.js"></script>
+  </body>
+</html>

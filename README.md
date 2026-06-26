@@ -13,9 +13,11 @@
 - 已初始化项目目录结构。
 - 已初始化 Git 仓库。
 - 已实现可运行的命令行识别功能。
+- 已实现可运行的本地 Web 控制台，支持登录、图片检测、记录查询、异常预警、统计分析和功能测试看板。
 - 已提供演示图片生成脚本和单元测试。
 - 已补充合成测试集、批量评估结果和评估图表。
-- 尚未实现模型训练、后端接口和前端页面。
+- 已补充论文系统界面实现与系统测试章节真实运行截图。
+- 尚未实现真实 CNN 模型训练和生产级数据库部署。
 
 ## 计划功能
 
@@ -26,12 +28,13 @@
 3. 番茄生鲜度识别：基于颜色、暗斑、纹理等启发式特征输出优质、新鲜合格、轻微变质、严重变质四类结果。
 4. 异常预警：对轻微变质和严重变质番茄生成预警信息。
 5. 检测记录管理：以 JSON Lines 格式保存图像路径、识别结果、置信度和检测时间。
+6. Web 系统页面：提供用户权限、图像检测、记录查询、异常预警、统计分析和测试结果展示。
 
 后续扩展模块：
 
-1. 数据统计分析：统计检测总量、合格率和异常等级占比。
-2. 后端服务接口：提供图片上传、识别、记录查询等 API。
-3. 前端展示页面：展示检测结果、预警信息和统计图表。
+1. 后端数据库：将 JSON Lines 记录替换为 MySQL 或 SQLite。
+2. 模型推理服务：将启发式规则替换为 TensorFlow/PyTorch 模型。
+3. 生产部署：补充用户会话、权限校验、日志轮转和异常处理。
 
 ## 技术栈规划
 
@@ -58,8 +61,11 @@ TomatoFreshnessRecognition/
     create_demo_images.py
     generate_test_dataset.py
     evaluate_test_set.py
+    update_paper_system_tests.py
   src/
     tomato_freshness/   # 番茄识别核心代码
+  web/                   # 本地 Web 控制台页面
+  outputs/               # 运行时检测记录和上传文件
   datasets/
     test_set/           # 合成测试集与标签文件
   models/               # 后续模型文件目录，当前不提交大模型文件
@@ -107,6 +113,17 @@ TomatoFreshnessRecognition/
    PYTHONPATH=src python scripts/evaluate_test_set.py
    ```
 
+7. 启动本地 Web 系统：
+
+   ```bash
+   PYTHONPATH=src python -m tomato_freshness.webapp --port 8765 --seed-demo
+   ```
+
+   浏览器访问 `http://127.0.0.1:8765`。演示账号：
+
+   - 管理员：`admin / admin123`
+   - 检测员：`inspector / inspect123`
+
 ## 测试集与评估图表
 
 当前项目提供一组合成测试集，用于演示识别流程、批量评估和论文图表展示。测试集不代表真实菜市场采集数据，主要用于课程设计阶段的功能验证。
@@ -126,6 +143,7 @@ TomatoFreshnessRecognition/
 - `docs/evaluation/confusion_matrix.png`：混淆矩阵图
 - `docs/evaluation/prediction_distribution.png`：预测等级分布图
 - `docs/evaluation/average_score_by_class.png`：各等级平均新鲜度得分图
+- `docs/screenshots/system_tests/`：论文系统界面与功能测试真实运行截图
 
 当前合成测试集共 48 张图片，评估脚本输出的总体准确率约为 0.6042。由于当前版本使用启发式规则，不使用真实训练模型，因此该指标只用于流程展示，不代表最终模型能力。
 

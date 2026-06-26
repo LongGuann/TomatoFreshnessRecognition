@@ -13,11 +13,14 @@ venv/
 # IDE
 .idea/
 .vscode/
+.playwright-cli/
 
 # Runtime outputs
 outputs/
 runs/
 logs/
+render_check*/
+docs/paper/render_check*/
 
 # Large local assets
 datasets/*
